@@ -3,8 +3,9 @@
 import type React from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { ScrollControls, useScroll, Text, Stars, Sparkles, Environment, Scroll } from "@react-three/drei"
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState, useEffect, useMemo } from "react"
 import type { Group } from "three"
+import * as THREE from "three"
 
 // カメラに近づく処理だけ
 function CameraRig({ children }: { children: React.ReactNode }) {
@@ -113,12 +114,121 @@ function CTASection() {
   )
 }
 
+// Custom 3D Starfield Effect (Kirupa style)
+function Starfield({ count = 500, speed = 0.08, spread = 100, starSize = 0.7 }) {
+  const mesh = useRef<THREE.Points>(null)
+  const [positions] = useState(() => {
+    // Each star: [x, y, z, speed, maxRadius]
+    const arr = []
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * 2 * Math.PI
+      const radius = Math.random() * spread
+      const x = Math.cos(angle) * radius
+      const y = Math.sin(angle) * radius
+      const z = Math.random() * spread * 2 - spread
+      const s = 0.5 + Math.random() * 1.5
+      const maxR = 0.5 + Math.random() * 1.5
+      arr.push({ x, y, z, s, maxR })
+    }
+    return arr
+  })
+
+  useFrame(() => {
+    for (let i = 0; i < positions.length; i++) {
+      let star = positions[i]
+      star.z += star.s * speed * 2
+      if (star.z > spread) {
+        // Reset star to far away
+        const angle = Math.random() * 2 * Math.PI
+        const radius = Math.random() * spread
+        star.x = Math.cos(angle) * radius
+        star.y = Math.sin(angle) * radius
+        star.z = -spread
+        star.s = 0.5 + Math.random() * 1.5
+        star.maxR = 0.5 + Math.random() * 1.5
+      }
+    }
+    if (mesh.current) {
+      const geometry = mesh.current.geometry as THREE.BufferGeometry
+      geometry.attributes.position.needsUpdate = true
+      geometry.attributes.size.needsUpdate = true
+    }
+  })
+
+  // Prepare buffer geometry for all stars
+  const starGeom = useMemo(() => {
+    const positionsArr = new Float32Array(count * 3)
+    const sizesArr = new Float32Array(count)
+    for (let i = 0; i < count; i++) {
+      positionsArr[i * 3] = positions[i].x
+      positionsArr[i * 3 + 1] = positions[i].y
+      positionsArr[i * 3 + 2] = positions[i].z
+      sizesArr[i] = positions[i].maxR * starSize
+    }
+    const geom = new THREE.BufferGeometry()
+    geom.setAttribute("position", new THREE.BufferAttribute(positionsArr, 3))
+    geom.setAttribute("size", new THREE.BufferAttribute(sizesArr, 1))
+    return geom
+  }, [count, positions, starSize])
+
+  // Update geometry on each frame
+  useFrame(() => {
+    if (!mesh.current) return
+    const geometry = mesh.current.geometry as THREE.BufferGeometry
+    const pos = geometry.attributes.position.array as Float32Array
+    const size = geometry.attributes.size.array as Float32Array
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = positions[i].x
+      pos[i * 3 + 1] = positions[i].y
+      pos[i * 3 + 2] = positions[i].z
+      // Make stars grow as they approach
+      size[i] = positions[i].maxR * starSize * (1.5 - (positions[i].z + spread) / (2 * spread))
+    }
+    geometry.attributes.position.needsUpdate = true
+    geometry.attributes.size.needsUpdate = true
+  })
+
+  // Custom shader material for glowing stars
+  const starMaterial = useMemo(() => {
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        color: { value: new THREE.Color("#fff") },
+      },
+      vertexShader: `
+        attribute float size;
+        varying float vSize;
+        void main() {
+          vSize = size;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = size * (300.0 / -mvPosition.z);
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 color;
+        varying float vSize;
+        void main() {
+          float d = length(gl_PointCoord - vec2(0.5));
+          float alpha = smoothstep(0.5, 0.2, d);
+          gl_FragColor = vec4(color, alpha);
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+    })
+  }, [])
+
+  return (
+    <points ref={mesh} geometry={starGeom} material={starMaterial} />
+  )
+}
+
 // Sceneコンポーネント
 function Scene() {
   return (
     <CameraRig>
       <ambientLight intensity={0.5} />
-      <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+      <Starfield count={800} speed={0.25} spread={100} starSize={1.2} />
       <Sparkles count={100} scale={[100, 100, 100]} size={6} speed={0.4} />
       <Environment preset="night" />
 
@@ -143,7 +253,7 @@ export default function SpaceScrollLP() {
       <Canvas camera={{ position: [0, 0, 5], fov: 60 }}>
         {/* ⭐ 星・光・環境はカメラとともに常に表示 */}
         <ambientLight intensity={0.5} />
-        <Stars radius={100} depth={100} count={8000} factor={4} saturation={0} fade speed={1} />
+        <Starfield count={1200} speed={0.3} spread={120} starSize={1.3} />
         <Sparkles count={150} scale={[100, 100, 100]} size={6} speed={0.5} />
         <Environment preset="night" />
 
