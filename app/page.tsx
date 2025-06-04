@@ -14,7 +14,7 @@ function CameraRig({ children }: { children: React.ReactNode }) {
 
   useFrame(() => {
     if (group.current) {
-      const maxDepth = 900
+      const maxDepth = 1600
       group.current.position.z = scroll.offset * maxDepth
     }
   })
@@ -94,6 +94,45 @@ function SolutionSection() {
           </Text>
         </group>
       ))}
+    </group>
+  )
+}
+
+function DummySection1() {
+  return (
+    <group>
+      <Text position={[0, 1, 0]} fontSize={2.5} color="#e0e7ff" anchorX="center" anchorY="middle">
+        Dummy Section 1
+      </Text>
+      <Text position={[0, -1.5, 0]} fontSize={1.2} color="#94a3b8" anchorX="center" anchorY="middle">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </Text>
+    </group>
+  )
+}
+
+function DummySection2() {
+  return (
+    <group>
+      <Text position={[0, 1, 0]} fontSize={2.5} color="#e0e7ff" anchorX="center" anchorY="middle">
+        Dummy Section 2
+      </Text>
+      <Text position={[0, -1.5, 0]} fontSize={1.2} color="#94a3b8" anchorX="center" anchorY="middle">
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </Text>
+    </group>
+  )
+}
+
+function DummySection3() {
+  return (
+    <group>
+      <Text position={[0, 1, 0]} fontSize={2.5} color="#e0e7ff" anchorX="center" anchorY="middle">
+        Dummy Section 3
+      </Text>
+      <Text position={[0, -1.5, 0]} fontSize={1.2} color="#94a3b8" anchorX="center" anchorY="middle">
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+      </Text>
     </group>
   )
 }
@@ -236,7 +275,10 @@ function Scene() {
       <Section zPosition={-50}><HeroSection /></Section>
       <Section zPosition={-300}><ProblemSection /></Section>
       <Section zPosition={-550}><SolutionSection /></Section>
-      <Section zPosition={-800}><CTASection /></Section>
+      <Section zPosition={-800}><DummySection1 /></Section>
+      <Section zPosition={-1050}><DummySection2 /></Section>
+      <Section zPosition={-1300}><DummySection3 /></Section>
+      <Section zPosition={-1550}><CTASection /></Section>
     </CameraRig>
   )
 }
@@ -258,7 +300,7 @@ export default function SpaceScrollLP() {
         <Environment preset="night" />
 
         {/* 📜 スクロールで動かすのはセクションのみ */}
-        <ScrollControls pages={4} damping={0.15}>
+        <ScrollControls pages={7} damping={0.15}>
           <Scroll>
             <Scene />
           </Scroll>
