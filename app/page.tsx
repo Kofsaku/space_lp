@@ -6,6 +6,13 @@ import { ScrollControls, useScroll, Text, Stars, Sparkles, Environment, Scroll }
 import { useRef, useState, useEffect, useMemo } from "react"
 import type { Group } from "three"
 import * as THREE from "three"
+// import { HeroSection } from "@/components/lp/HeroSection"
+// import { SolutionSection } from "@/components/lp/SolutionSection"
+// import { PersonaSection } from "@/components/lp/PersonaSection"
+// import { AchievementSection } from "@/components/lp/AchievementSection"
+// import { ScrollExperienceSection } from "@/components/lp/ScrollExperienceSection"
+// import { FAQSection } from "@/components/lp/FAQSection"
+// import { CTASection } from "@/components/lp/CTASection"
 
 // カメラに近づく処理だけ
 function CameraRig({ children }: { children: React.ReactNode }) {
@@ -14,7 +21,7 @@ function CameraRig({ children }: { children: React.ReactNode }) {
 
   useFrame(() => {
     if (group.current) {
-      const maxDepth = 900
+      const maxDepth = 1300
       group.current.position.z = scroll.offset * maxDepth
     }
   })
@@ -33,83 +40,6 @@ function Section({
   return (
     <group position={[0, 0, zPosition]}>
       {children}
-    </group>
-  )
-}
-
-// セクション内容（手動でテキスト位置調整）
-function HeroSection() {
-  return (
-    <group>
-      <Text position={[0, 1.2, 0]} fontSize={4} color="white" anchorX="center" anchorY="middle">
-        AI × 事業開発
-      </Text>
-      <Text position={[0, -2, 0]} fontSize={2} color="#94a3b8" anchorX="center" anchorY="middle">
-        未来を創造する力を、あなたの手に
-      </Text>
-    </group>
-  )
-}
-
-function ProblemSection() {
-  const problems = [
-    "AIを学んでも実際のビジネスに活かせない",
-    "技術は分かるが事業化のノウハウがない",
-    "一人で学習していても限界を感じる",
-    "最新のAI技術についていけない",
-  ]
-  return (
-    <group>
-      <Text position={[0, 2, 0]} fontSize={3} color="#f87171" anchorX="center" anchorY="middle">
-        こんな悩みありませんか？
-      </Text>
-      {problems.map((text, i) => (
-        <Text key={i} position={[0, -1.5 - i * 2, 0]} fontSize={1.5} color="#94a3b8" anchorX="center" anchorY="middle">
-          {text}
-        </Text>
-      ))}
-    </group>
-  )
-}
-
-function SolutionSection() {
-  const solutions = [
-    { title: "実践的AI開発", description: "理論だけでなく、実際のプロダクト開発を通じて学習" },
-    { title: "事業化ノウハウ", description: "技術を収益に変える具体的な方法論を習得" },
-    { title: "コミュニティ", description: "同じ志を持つ仲間との継続的な学習環境" },
-    { title: "最新技術", description: "常にアップデートされる最先端のAI技術情報" },
-  ]
-  return (
-    <group>
-      <Text position={[0, -2, 0]} fontSize={3} color="#60a5fa" anchorX="center" anchorY="middle">
-        未来都市への扉を開く
-      </Text>
-      {solutions.map((s, i) => (
-        <group key={i} position={[0, -3.5 - i * 4, 0]}>
-          <Text fontSize={1.5} color="#93c5fd" anchorX="center" anchorY="middle">
-            {s.title}
-          </Text>
-          <Text position={[0, -1.2, 0]} fontSize={1} color="#94a3b8" anchorX="center" anchorY="middle">
-            {s.description}
-          </Text>
-        </group>
-      ))}
-    </group>
-  )
-}
-
-function CTASection() {
-  return (
-    <group>
-      <Text position={[0, -4, 0]} fontSize={4} color="#fbbf24" anchorX="center" anchorY="middle">
-        今すぐ始めよう
-      </Text>
-      <Text position={[0, -7, 0]} fontSize={2} color="#94a3b8" anchorX="center" anchorY="middle">
-        限定モニター募集中 - 特別価格でご提供
-      </Text>
-      <Text position={[0, -9, 0]} fontSize={1.5} color="#94a3b8" anchorX="center" anchorY="middle">
-        ※ 先着20名様限定
-      </Text>
     </group>
   )
 }
@@ -223,7 +153,129 @@ function Starfield({ count = 500, speed = 0.08, spread = 100, starSize = 0.7 }) 
   )
 }
 
-// Sceneコンポーネント
+// 3D Background Scene
+function BackgroundScene() {
+  return (
+    <>
+      <ambientLight intensity={0.5} />
+      <Starfield count={1200} speed={0.3} spread={120} starSize={1.3} />
+      <Sparkles count={150} scale={[100, 100, 100]} size={6} speed={0.5} />
+      <Environment preset="night" />
+    </>
+  )
+}
+
+function AchievementSection() {
+  return (
+    <group>
+      <Text position={[0, 0, 0]} fontSize={2.5} color="#facc15" anchorX="center" anchorY="middle">
+        実際に生まれたプロダクト・受講生の声
+      </Text>
+      <Text position={[0, -2, 0]} fontSize={1.2} color="#fff" anchorX="center" anchorY="middle">
+        AI議事録自動化ツール など（ダミー）
+      </Text>
+      <Text position={[0, -4, 0]} fontSize={1.2} color="#fff" anchorX="center" anchorY="middle">
+        「ゼロから本当にプロダクトが作れた！」（ダミー）
+      </Text>
+    </group>
+  )
+}
+
+function FAQSection() {
+  return (
+    <group>
+      <Text position={[0, 0, 0]} fontSize={2} color="#4ade80" anchorX="center" anchorY="middle">
+        よくある質問
+      </Text>
+      <Text position={[0, -2, 0]} fontSize={1.1} color="#fff" anchorX="center" anchorY="middle">
+        Q. プログラミング経験ゼロでも大丈夫ですか？\nA. 問題ありません。受講者の約70％は非エンジニアです。
+      </Text>
+      <Text position={[0, -4, 0]} fontSize={1.1} color="#fff" anchorX="center" anchorY="middle">
+        Q. AIの知識がなくても参加できますか？\nA. ChatGPTやNoCodeなど、やさしい導入から始めます。
+      </Text>
+      <Text position={[0, -6, 0]} fontSize={1.1} color="#fff" anchorX="center" anchorY="middle">
+        Q. 料金や期間は？\nA. モニター期間中は一部無料。正式リリース前に相談が可能です。
+      </Text>
+    </group>
+  )
+}
+
+function CTASection() {
+  return (
+    <group>
+      <Text position={[0, 0, 0]} fontSize={2.2} color="#fbbf24" anchorX="center" anchorY="middle">
+        まだ"誰も見たことのない"サービスを、あなたの手で生み出そう。
+      </Text>
+      <Text position={[0, -2, 0]} fontSize={1.2} color="#94a3b8" anchorX="center" anchorY="middle">
+        無料で相談する（フォームはWeb版で表示）
+      </Text>
+      <Text position={[0, -4, 0]} fontSize={1.1} color="#94a3b8" anchorX="center" anchorY="middle">
+        今だけ無料・先着20名限定・リリース前の特別モニター枠
+      </Text>
+    </group>
+  )
+}
+
+function ProblemSection() {
+  const problems = [
+    "AIを学んでも実際のビジネスに活かせない",
+    "技術は分かるが事業化のノウハウがない",
+    "一人で学習していても限界を感じる",
+    "最新のAI技術についていけない",
+  ]
+  return (
+    <group>
+      <Text position={[0, 0, 0]} fontSize={3} color="#f87171" anchorX="center" anchorY="middle">
+        こんな悩みありませんか？
+      </Text>
+      {problems.map((text, i) => (
+        <Text key={i} position={[0, -2 - i * 2, 0]} fontSize={1.5} color="#94a3b8" anchorX="center" anchorY="middle">
+          {text}
+        </Text>
+      ))}
+    </group>
+  )
+}
+
+function HeroSection() {
+  return (
+    <group>
+      <Text position={[0, 0, 0]} fontSize={4} color="white" anchorX="center" anchorY="middle">
+        AI × 事業開発
+      </Text>
+      <Text position={[0, -2, 0]} fontSize={2} color="#94a3b8" anchorX="center" anchorY="middle">
+        未来を創造する力を、あなたの手に
+      </Text>
+    </group>
+  )
+}
+
+function SolutionSection() {
+  const solutions = [
+    { title: "実践的AI開発", description: "理論だけでなく、実際のプロダクト開発を通じて学習" },
+    { title: "事業化ノウハウ", description: "技術を収益に変える具体的な方法論を習得" },
+    { title: "コミュニティ", description: "同じ志を持つ仲間との継続的な学習環境" },
+    { title: "最新技術", description: "常にアップデートされる最先端のAI技術情報" },
+  ]
+  return (
+    <group>
+      <Text position={[0, 0, 0]} fontSize={3} color="#60a5fa" anchorX="center" anchorY="middle">
+        未来都市への扉を開く
+      </Text>
+      {solutions.map((s, i) => (
+        <group key={i} position={[0, -2.5 - i * 3, 0]}>
+          <Text fontSize={1.5} color="#93c5fd" anchorX="center" anchorY="middle">
+            {s.title}
+          </Text>
+          <Text position={[0, -1.2, 0]} fontSize={1} color="#94a3b8" anchorX="center" anchorY="middle">
+            {s.description}
+          </Text>
+        </group>
+      ))}
+    </group>
+  )
+}
+
 function Scene() {
   return (
     <CameraRig>
@@ -232,16 +284,16 @@ function Scene() {
       <Sparkles count={100} scale={[100, 100, 100]} size={6} speed={0.4} />
       <Environment preset="night" />
 
-      {/* Z位置だけで制御。Yは各セクション内で個別調整 */}
       <Section zPosition={-50}><HeroSection /></Section>
       <Section zPosition={-300}><ProblemSection /></Section>
       <Section zPosition={-550}><SolutionSection /></Section>
-      <Section zPosition={-800}><CTASection /></Section>
+      <Section zPosition={-800}><AchievementSection /></Section>
+      <Section zPosition={-1050}><FAQSection /></Section>
+      <Section zPosition={-1300}><CTASection /></Section>
     </CameraRig>
   )
 }
 
-// Appルート
 export default function SpaceScrollLP() {
   useEffect(() => {
     document.body.style.overflow = "hidden"
@@ -251,14 +303,12 @@ export default function SpaceScrollLP() {
   return (
     <div className="h-screen w-screen overflow-hidden">
       <Canvas camera={{ position: [0, 0, 5], fov: 60 }}>
-        {/* ⭐ 星・光・環境はカメラとともに常に表示 */}
         <ambientLight intensity={0.5} />
         <Starfield count={1200} speed={0.3} spread={120} starSize={1.3} />
         <Sparkles count={150} scale={[100, 100, 100]} size={6} speed={0.5} />
         <Environment preset="night" />
 
-        {/* 📜 スクロールで動かすのはセクションのみ */}
-        <ScrollControls pages={4} damping={0.15}>
+        <ScrollControls pages={12} damping={0.15}>
           <Scroll>
             <Scene />
           </Scroll>
