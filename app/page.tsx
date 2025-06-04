@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { ScrollControls, useScroll, Text, Stars, Sparkles, Environment, Scroll } from "@react-three/drei"
+import { ScrollControls, useScroll, Text, Stars, Sparkles, Environment } from "@react-three/drei"
 import { useRef, useState, useEffect, useMemo } from "react"
 import type { Group } from "three"
 import * as THREE from "three"
@@ -309,9 +309,7 @@ export default function SpaceScrollLP() {
         <Environment preset="night" />
 
         <ScrollControls pages={12} damping={0.15}>
-          <Scroll>
-            <Scene />
-          </Scroll>
+          <Scene />
         </ScrollControls>
       </Canvas>
     </div>
