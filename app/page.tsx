@@ -3,6 +3,7 @@
 import type React from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { ScrollControls, useScroll, Text, Stars, Sparkles, Environment } from "@react-three/drei"
+import { FixedScroll } from "@/components/FixedScroll"
 import { useRef, useState, useEffect, useMemo } from "react"
 import type { Group } from "three"
 import * as THREE from "three"
@@ -301,9 +302,12 @@ export default function SpaceScrollLP() {
         <Sparkles count={150} scale={[100, 100, 100]} size={6} speed={0.5} />
         <Environment preset="night" />
 
-        {/* The Drei Scroll element is omitted to keep sections vertically centered */}
+        {/* Use a custom scroll wrapper to keep sections centered while
+            still allowing depth-based scrolling */}
         <ScrollControls pages={12} damping={0.15}>
-          <Scene />
+          <FixedScroll>
+            <Scene />
+          </FixedScroll>
         </ScrollControls>
       </Canvas>
     </div>
