@@ -2,17 +2,11 @@
 
 import type React from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { ScrollControls, useScroll, Text, Stars, Sparkles, Environment, Scroll } from "@react-three/drei"
+import { ScrollControls, useScroll, Text, Stars, Sparkles, Environment } from "@react-three/drei"
+import { FixedScroll } from "@/components/FixedScroll"
 import { useRef, useState, useEffect, useMemo } from "react"
 import type { Group } from "three"
 import * as THREE from "three"
-// import { HeroSection } from "@/components/lp/HeroSection"
-// import { SolutionSection } from "@/components/lp/SolutionSection"
-// import { PersonaSection } from "@/components/lp/PersonaSection"
-// import { AchievementSection } from "@/components/lp/AchievementSection"
-// import { ScrollExperienceSection } from "@/components/lp/ScrollExperienceSection"
-// import { FAQSection } from "@/components/lp/FAQSection"
-// import { CTASection } from "@/components/lp/CTASection"
 
 // カメラに近づく処理だけ
 function CameraRig({ children }: { children: React.ReactNode }) {
@@ -308,10 +302,12 @@ export default function SpaceScrollLP() {
         <Sparkles count={150} scale={[100, 100, 100]} size={6} speed={0.5} />
         <Environment preset="night" />
 
+        {/* Use a custom scroll wrapper to keep sections centered while
+            still allowing depth-based scrolling */}
         <ScrollControls pages={12} damping={0.15}>
-          <Scroll>
+          <FixedScroll>
             <Scene />
-          </Scroll>
+          </FixedScroll>
         </ScrollControls>
       </Canvas>
     </div>
