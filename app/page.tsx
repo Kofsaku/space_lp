@@ -6,13 +6,6 @@ import { ScrollControls, useScroll, Text, Stars, Sparkles, Environment } from "@
 import { useRef, useState, useEffect, useMemo } from "react"
 import type { Group } from "three"
 import * as THREE from "three"
-// import { HeroSection } from "@/components/lp/HeroSection"
-// import { SolutionSection } from "@/components/lp/SolutionSection"
-// import { PersonaSection } from "@/components/lp/PersonaSection"
-// import { AchievementSection } from "@/components/lp/AchievementSection"
-// import { ScrollExperienceSection } from "@/components/lp/ScrollExperienceSection"
-// import { FAQSection } from "@/components/lp/FAQSection"
-// import { CTASection } from "@/components/lp/CTASection"
 
 // カメラに近づく処理だけ
 function CameraRig({ children }: { children: React.ReactNode }) {
@@ -308,6 +301,7 @@ export default function SpaceScrollLP() {
         <Sparkles count={150} scale={[100, 100, 100]} size={6} speed={0.5} />
         <Environment preset="night" />
 
+        {/* The Drei Scroll element is omitted to keep sections vertically centered */}
         <ScrollControls pages={12} damping={0.15}>
           <Scene />
         </ScrollControls>
